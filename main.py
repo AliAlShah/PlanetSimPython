@@ -1,5 +1,6 @@
 from operator import le
 from site import venv
+from turtle import distance
 import pygame
 import math
 pygame.init()
@@ -8,11 +9,13 @@ WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Planet Sim")
 
+FONT = pygame.font.SysFont("comicsans", 16)
+
 class Planet:
     AU = 149.6e6 * 1000
     G = 6.67428e-11
     SCALE = 250/AU # 1AU = 100 pixels
-    TIMESTEP = 3600 * 24 # 1 day
+    TIMESTEP = 3600 * 12 # 1 day
 
     def __init__(self, x, y, radius, color, mass):
         self.x = x
@@ -43,6 +46,11 @@ class Planet:
 
         pygame.draw.circle(win, self.color, (x, y), self.radius)
 
+        if not self.sun:
+            distance_text = FONT.render(f"{round(self.distance_to_sun/1000, 1)}km", 1, (255, 255, 255))
+            win.blit(distance_text, (x - distance_text.get_width()/2 , y - distance_text.get_height()/2))
+
+    
     def attraction(self, other):
         other_x, other_y = other.x, other.y
         distance_x = other_x - self.x
