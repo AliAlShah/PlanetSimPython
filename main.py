@@ -1,3 +1,4 @@
+from operator import le
 from site import venv
 import pygame
 import math
@@ -10,7 +11,7 @@ pygame.display.set_caption("Planet Sim")
 class Planet:
     AU = 149.6e6 * 1000
     G = 6.67428e-11
-    SCALE = 240/AU # 1AU = 100 pixels
+    SCALE = 250/AU # 1AU = 100 pixels
     TIMESTEP = 3600 * 24 # 1 day
 
     def __init__(self, x, y, radius, color, mass):
@@ -30,6 +31,16 @@ class Planet:
     def draw(self, win):
         x = self.x * self.SCALE + WIDTH/2
         y = self.y * self.SCALE + HEIGHT/2
+        
+        if len(self.orbit) > 2:
+            updated_points = []
+            for point in self.orbit:
+                x, y = point
+                x = x * self.SCALE + WIDTH/2
+                y = y * self.SCALE + HEIGHT/2
+                updated_points.append((x, y))
+            pygame.draw.lines(win, self.color, False, updated_points, 2)
+
         pygame.draw.circle(win, self.color, (x, y), self.radius)
 
     def attraction(self, other):
@@ -71,13 +82,13 @@ def main():
     sun.sun = True
 
     earth = Planet(-1 * Planet.AU, 0, 16, (100, 149, 237), 5.9742 * 10**24)
-    earth.y_vel = 20.783 * 1000
+    earth.y_vel = 29.783 * 1000
     mars = Planet(-1.524* Planet.AU, 0, 12, (188, 39, 50), 6.29 * 10**23)
     mars.y_vel = 24.077 * 1000
-    mercury = Planet(-0.287 * Planet.AU, 0, 8, (80, 78, 81), 3.30 * 10**23)
-    mercury.y_vel = 47.4 * 1000
-    venus = Planet(-0.723 * Planet.AU, 0, 14, (255, 255, 255), 4.8685 * 10**24)
-    venus.y_vel = 35.02 * 1000
+    mercury = Planet(0.287 * Planet.AU, 0, 8, (80, 78, 81), 3.30 * 10**23)
+    mercury.y_vel = -47.4 * 1000
+    venus = Planet(0.723 * Planet.AU, 0, 14, (255, 255, 255), 4.8685 * 10**24)
+    venus.y_vel = -35.02 * 1000
  
     planets = [sun, earth, mars, mercury, venus]
 
