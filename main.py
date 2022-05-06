@@ -1,6 +1,3 @@
-from operator import le
-from site import venv
-from turtle import distance
 import pygame
 import math
 pygame.init()
